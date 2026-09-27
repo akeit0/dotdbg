@@ -13,7 +13,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        include:
+          - os: windows-latest
+            test-target: test/DotDbg.Tests/DotDbg.Tests.csproj
+          - os: ubuntu-latest
+            test-target: DotDbg.slnx
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
@@ -27,5 +31,5 @@ jobs:
         run: dotnet tool restore
       - name: Check formatting
         run: dotnet csharpier check src test samples
-      - name: Unit and debugger workload tests
-        run: dotnet test DotDbg.slnx --nologo
+      - name: Test ${{ matrix.test-target }}
+        run: dotnet test ${{ matrix.test-target }} --nologo

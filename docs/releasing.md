@@ -2,7 +2,7 @@
 
 The [release workflow](../.github/workflows/release.yml) publishes the `DotDbg` .NET tool when a `vMAJOR.MINOR.PATCH` tag (or a prerelease tag such as `v1.1.0-rc.1`) is pushed. It accepts tags pointing to commits on `main`. The release version comes from the tag and overrides the project's `0.0.0-local` default; do not edit the project to release a version.
 
-The workflow tests the tagged commit on Windows and Ubuntu, packs the tool on Ubuntu, exchanges a GitHub OIDC token for a short-lived NuGet API key, publishes the package, and creates a GitHub release with the `.nupkg` attached. GitHub generates release notes from merged pull requests. The fresh v0.1.0 history has no pull requests to summarize. NuGet versions cannot be replaced, so use a new tag and version for any correction.
+The workflow runs unit tests on Windows and the full debugger workload suite on Ubuntu, packs the tool on Ubuntu, exchanges a GitHub OIDC token for a short-lived NuGet API key, publishes the package, and creates a GitHub release with the `.nupkg` attached. Run the full suite locally on Windows before tagging; GitHub-hosted Windows runners intermittently fail to attach to target processes. GitHub generates release notes from merged pull requests. The fresh v0.1.0 history has no pull requests to summarize. NuGet versions cannot be replaced, so use a new tag and version for any correction.
 
 ## One-time configuration
 

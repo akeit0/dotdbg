@@ -22,7 +22,7 @@ dotnet csharpier format src test samples
 dotnet csharpier check src test samples
 ```
 
-Do not apply the root formatting command to `sharpdbg`. The [cross-platform checks](.github/workflows/cross-platform-checks.yml) workflow validates formatting, unit tests, and debugger workloads on Windows and Ubuntu.
+Do not apply the root formatting command to `sharpdbg`. The [cross-platform checks](.github/workflows/cross-platform-checks.yml) workflow validates formatting and unit tests on Windows and Ubuntu, and debugger workloads on Ubuntu. Run `dotnet test DotDbg.slnx` locally on Windows to verify live debugging there; the GitHub-hosted Windows runner intermittently fails to attach to target processes.
 
 ## Debugger changes
 

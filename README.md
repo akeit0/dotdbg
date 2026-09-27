@@ -29,7 +29,7 @@ dotnet test DotDbg.slnx
 dotnet src/DotDbg/bin/Debug/net10.0/DotDbg.dll --help
 ```
 
-The build restores `Microsoft.Diagnostics.DbgShim`. The test suite includes live debugger workloads that launch sample apps and attach to a running process. The [cross-platform checks](.github/workflows/cross-platform-checks.yml) workflow runs on Windows and Ubuntu.
+The build restores `Microsoft.Diagnostics.DbgShim`. The test suite includes live debugger workloads that launch sample apps and attach to a running process. The [cross-platform checks](.github/workflows/cross-platform-checks.yml) workflow runs unit tests on Windows and the full suite on Ubuntu. Run the full suite locally on Windows for live debugger verification; GitHub-hosted Windows runners intermittently fail to attach to target processes.
 
 To package and install the current checkout as a local .NET tool:
 
