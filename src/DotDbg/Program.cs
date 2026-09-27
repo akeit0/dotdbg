@@ -135,6 +135,12 @@ internal static class Program
 
     private static async Task<int> RunDaemonAsync(string sessionId, bool verbose)
     {
+        // A ping can time out while the existing daemon is busy. Keep a second
+        // daemon from accepting commands for the same session pipe.
+        using var lease = DaemonLease.TryAcquire(sessionId);
+        if (lease is null)
+            return 0;
+
         var pipeName = PipeServer.ComputePipeName(sessionId);
 
         Action<string> logger = verbose
