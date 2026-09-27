@@ -1,0 +1,24 @@
+<Solution>
+    <Folder Name="/Solution Items/">
+        <File Path=".gitignore" />
+        <File Path="README.md" />
+    </Folder>
+    <Folder Name="/src/">
+        <Project Path="src/DotDbg/DotDbg.csproj" />
+        <Project Path="sharpdbg/src/SharpDbg.Infrastructure/SharpDbg.Infrastructure.csproj" />
+    </Folder>
+    <Folder Name="/samples/">
+        <Project Path="samples/DbgTargetAgentApp/DbgTargetAgentApp.csproj" />
+        <Project Path="samples/DbgTargetCheckoutApp/DbgTargetCheckoutApp.csproj" />
+        <Project Path="samples/DbgTargetExceptionApp/DbgTargetExceptionApp.csproj" />
+        <Project Path="samples/DbgTargetSampleApp/DbgTargetSampleApp.csproj" />
+        <Project Path="samples/DbgTargetShapeApp/DbgTargetShapeApp.csproj" />
+        <Project Path="samples/DbgTargetTickerApp/DbgTargetTickerApp.csproj" />
+        <File Path="samples/DbgTargetFileApp/hello.cs" />
+        <File Path="samples/DbgTargetFileApp/README.md" />
+    </Folder>
+    <Folder Name="/test/">
+        <Project Path="test/DotDbg.Tests/DotDbg.Tests.csproj" />
+        <Project Path="test/DotDbg.WorkloadTests/DotDbg.WorkloadTests.csproj" />
+    </Folder>
+</Solution>

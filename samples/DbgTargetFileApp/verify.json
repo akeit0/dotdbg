@@ -1,0 +1,20 @@
+{
+  "commands": [
+    "file samples/DbgTargetFileApp/hello.cs -c Debug",
+    "break samples/DbgTargetFileApp/hello.cs:27 --name greetPrint",
+    "watch n",
+    "run",
+    "wait",
+    "backtrace",
+    "frame",
+    "list",
+    "print n",
+    "info locals",
+    "info args",
+    "watches",
+    "continue",
+    "wait",
+    "print n",
+    "quit"
+  ]
+}

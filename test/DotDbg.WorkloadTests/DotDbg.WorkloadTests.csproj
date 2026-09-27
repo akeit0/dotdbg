@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../../src/DotDbg/DotDbg.csproj" />
+        <ProjectReference
+            Include="../fixtures/AsyncDispatch/AsyncDispatch.csproj"
+            ReferenceOutputAssembly="false"
+        />
+        <ProjectReference
+            Include="../../samples/DbgTargetAgentApp/DbgTargetAgentApp.csproj"
+            ReferenceOutputAssembly="false"
+        />
+        <ProjectReference
+            Include="../../samples/DbgTargetCheckoutApp/DbgTargetCheckoutApp.csproj"
+            ReferenceOutputAssembly="false"
+        />
+        <ProjectReference
+            Include="../../samples/DbgTargetExceptionApp/DbgTargetExceptionApp.csproj"
+            ReferenceOutputAssembly="false"
+        />
+        <ProjectReference
+            Include="../../samples/DbgTargetShapeApp/DbgTargetShapeApp.csproj"
+            ReferenceOutputAssembly="false"
+        />
+        <ProjectReference
+            Include="../../samples/DbgTargetTickerApp/DbgTargetTickerApp.csproj"
+            ReferenceOutputAssembly="false"
+        />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>

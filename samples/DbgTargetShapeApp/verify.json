@@ -1,0 +1,32 @@
+{
+  "stopOnError": true,
+  "commands": [
+    "file samples/DbgTargetShapeApp/bin/Debug/net10.0/DbgTargetShapeApp.dll",
+    "break samples/DbgTargetShapeApp/Program.cs:40 --name mainPrint",
+    "condition 1 metric.Area > 90.0",
+    "trace-log samples/DbgTargetShapeApp/bin/Debug/net10.0/trace.log --clear",
+    "trace samples/DbgTargetShapeApp/Program.cs:50 iteration --name tryTrace",
+    "watch metric.Area",
+    "run",
+    "wait",
+    "backtrace",
+    "frame 1",
+    "frame 0",
+    "list",
+    "print metric",
+    "info locals",
+    "info args",
+    "info threads",
+    "info modules",
+    "info files",
+    "watches",
+    "unwatch 1",
+    "watches",
+    "continue",
+    "wait",
+    "wait",
+    "info trace",
+    "info exception",
+    "quit"
+  ]
+}
