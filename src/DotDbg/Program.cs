@@ -135,6 +135,12 @@ internal static class Program
 
     private static async Task<int> RunDaemonAsync(string sessionId, bool verbose)
     {
+        // A ping can time out while the existing daemon is busy. Keep a second
+        // daemon from accepting commands for the same session pipe.
+        using var lease = DaemonLease.TryAcquire(sessionId);
+        if (lease is null)
+            return 0;
+
         var pipeName = PipeServer.ComputePipeName(sessionId);
 
         Action<string> logger = verbose
@@ -453,14 +459,17 @@ internal static class Program
             // Daemon not running; start it.
         }
 
+        var useShellExecute = OperatingSystem.IsWindows();
         var startInfo = new ProcessStartInfo
         {
-            // Shell launch detaches the daemon from a caller's captured standard
-            // handles. Redirected child pipes still inherit other shell handles
-            // on Windows and can keep command substitution open indefinitely.
-            UseShellExecute = true,
+            // Windows shell launch detaches inherited handles. On Unix, give the
+            // daemon separate streams so captured CLI output can reach EOF.
+            UseShellExecute = useShellExecute,
             CreateNoWindow = true,
             WindowStyle = ProcessWindowStyle.Hidden,
+            RedirectStandardInput = !useShellExecute,
+            RedirectStandardOutput = !useShellExecute,
+            RedirectStandardError = !useShellExecute,
         };
 
         var assemblyPath = typeof(Program).Assembly.Location;
@@ -503,6 +512,8 @@ internal static class Program
         var daemon =
             Process.Start(startInfo)
             ?? throw new InvalidOperationException("Failed to start dotdbg daemon");
+        if (!useShellExecute)
+            daemon.StandardInput.Close();
 
         // Wait a moment for the daemon to start and try to connect.
         for (var attempt = 0; attempt < 10; attempt++)

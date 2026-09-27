@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
-      - name: Test
+      - name: Test solution
         run: dotnet test DotDbg.slnx --nologo
 
   publish:
