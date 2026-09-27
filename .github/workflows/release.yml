@@ -13,11 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: windows-latest
-            test-target: test/DotDbg.Tests/DotDbg.Tests.csproj
-          - os: ubuntu-latest
-            test-target: DotDbg.slnx
+        os: [windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
@@ -27,8 +23,8 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
-      - name: Test ${{ matrix.test-target }}
-        run: dotnet test ${{ matrix.test-target }} --nologo
+      - name: Test solution
+        run: dotnet test DotDbg.slnx --nologo
 
   publish:
     needs: verify
