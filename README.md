@@ -1,6 +1,6 @@
 # dotdbg
 
-`dotdbg` is a command-line debugger for managed .NET programs, designed for AI agents and terminal users. Each command is a short-lived process; a background daemon keeps the target and debugging state alive between calls. The debugger engine is the [`sharpdbg`](sharpdbg/README.md) submodule.
+`dotdbg` is a command-line debugger for managed .NET programs, designed for AI agents and terminal users. Each command is a short-lived process; a background daemon keeps the target and debugging state alive between calls. The debugger engine is the [`sharpdbg`](https://github.com/akeit0/sharpdbg/) submodule.
 
 It supports source and IL breakpoints, stepping, expression evaluation, watches, exception stops, stack inspection, and captured target output. Commands have familiar names such as `file`, `break`, `run`, `next`, and `backtrace`. `--json` returns structured responses, and `schema` describes the command surface.
 
