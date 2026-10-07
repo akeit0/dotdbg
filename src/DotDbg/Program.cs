@@ -446,6 +446,11 @@ internal static class Program
 
     private static async Task EnsureDaemonRunningAsync(string sessionId)
     {
+        // Every failure below surfaces as a generic startup failure, so report an
+        // unusable socket path with its real cause before spawning a daemon that
+        // could not listen either.
+        _ = PipeServer.ComputePipeName(sessionId);
+
         try
         {
             using var cts = new CancellationTokenSource(500);
