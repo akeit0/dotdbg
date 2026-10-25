@@ -11,6 +11,8 @@ It supports source and IL breakpoints, stepping, expression evaluation, watches,
 
 The cross-platform checks cover dotdbg's command and live debugger workload tests on Windows, Linux, and macOS (Apple Silicon). Windows is not required.
 
+On macOS, approve the debugger authorization prompt on first use.
+
 ## Install
 
 ```shell

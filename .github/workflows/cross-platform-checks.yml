@@ -24,6 +24,11 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
+      - name: Enable macOS debugger authorization
+        if: runner.os == 'macOS'
+        run: |
+          sudo /usr/sbin/DevToolsSecurity -enable
+          sudo /usr/sbin/dseditgroup -o edit -a "$(id -un)" -t user _developer
       - name: Restore formatter
         run: dotnet tool restore
       - name: Check formatting
