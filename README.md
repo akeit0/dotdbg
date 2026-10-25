@@ -14,7 +14,7 @@ The cross-platform checks cover dotdbg's command and live debugger workload test
 ## Install
 
 ```shell
-dotnet tool install --global DotDbg --version 0.1.0
+dotnet tool install --global DotDbg --version 0.1.1
 dotdbg --help
 ```
 
@@ -34,8 +34,8 @@ The build restores `Microsoft.Diagnostics.DbgShim`. The test suite includes live
 To package and install the current checkout as a local .NET tool:
 
 ```shell
-dotnet pack src/DotDbg/DotDbg.csproj -c Release -p:Version=0.1.0 -o artifacts/packages
-dotnet tool install DotDbg --tool-path artifacts/tools --add-source artifacts/packages --version 0.1.0
+dotnet pack src/DotDbg/DotDbg.csproj -c Release -p:Version=0.1.1 -o artifacts/packages
+dotnet tool install DotDbg --tool-path artifacts/tools --add-source artifacts/packages --version 0.1.1
 ```
 
 Run `./artifacts/tools/dotdbg.exe --help` on Windows or `./artifacts/tools/dotdbg --help` on Linux. The package ID is `DotDbg`; the installed command is `dotdbg`.

@@ -20,6 +20,6 @@ dotdbg print myVariable
 dotdbg quit
 ```
 
-Use `--json` for structured results, `source --last -c 'command; command'` to batch known steps, `help all` for command syntax, and `schema` for machine-readable command discovery. The target needs managed .NET runtime support and symbols for source debugging. Windows and Linux are tested.
+Use `--json` for structured results, `source --last -c 'command; command'` to batch known steps, `help all` for command syntax, and `schema` for machine-readable command discovery. The target needs managed .NET runtime support and symbols for source debugging. Windows, Linux, and macOS (Apple Silicon) are tested.
 
 License: MIT. The debugger engine includes SharpDbg, licensed separately under MIT.
