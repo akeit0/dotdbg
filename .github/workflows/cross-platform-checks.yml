@@ -33,5 +33,49 @@ jobs:
         run: dotnet tool restore
       - name: Check formatting
         run: dotnet csharpier check src test samples
+      - name: Diagnose macOS debugger launch
+        if: runner.os == 'macOS'
+        run: |
+          dotnet build DotDbg.slnx --nologo
+          python3 - <<'PY'
+          import json, os, pathlib, re, subprocess, time, uuid
+          session = 'ci-diagnostic-' + uuid.uuid4().hex
+          tool = 'src/DotDbg/bin/Debug/net10.0/DotDbg.dll'
+          base = ['dotnet', tool, '-s', session, '--json']
+          log_path = pathlib.Path('/tmp/dotdbg-launch-diagnostic.log')
+          log = log_path.open('w')
+          daemon = subprocess.Popen(['dotnet', tool, '-s', session, '--daemon', '--verbose'], stdout=log, stderr=subprocess.STDOUT)
+          try:
+              time.sleep(1)
+              for args in [
+                  ['file', 'samples/DbgTargetTickerApp/bin/Debug/net10.0/DbgTargetTickerApp'],
+                  ['break', 'samples/DbgTargetTickerApp/Program.cs:10'],
+                  ['run', '--wait', '--timeout', '10', '--', '--ticks', '2', '--delay-ms', '50', session],
+              ]:
+                  command = subprocess.Popen(base + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                  try:
+                      stdout, stderr = command.communicate(timeout=25)
+                      print(stdout, stderr, flush=True)
+                      assert command.returncode == 0
+                  except BaseException:
+                      print(log_path.read_text(), flush=True)
+                      targets = [daemon.pid, command.pid]
+                      targets += [int(pid) for pid in re.findall(r'PID: (\d+)', log_path.read_text())]
+                      for pid in targets:
+                          try:
+                              sample = subprocess.run(['sample', str(pid), '1', '10'], capture_output=True, text=True, timeout=10)
+                              print(sample.stdout, sample.stderr, flush=True)
+                          except subprocess.TimeoutExpired:
+                              print('Sampling timed out:', pid, flush=True)
+                      command.kill()
+                      raise
+          finally:
+              print(log_path.read_text(), flush=True)
+              try:
+                  subprocess.run(base + ['quit'], timeout=5)
+              except subprocess.TimeoutExpired:
+                  daemon.kill()
+              log.close()
+          PY
       - name: Test solution
         run: dotnet test DotDbg.slnx --nologo
