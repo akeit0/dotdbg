@@ -9,7 +9,7 @@ It supports source and IL breakpoints, stepping, expression evaluation, watches,
 - .NET 10 SDK to build and run dotdbg.
 - A managed .NET target with symbols for source breakpoints and stepping.
 
-The debugger workload tests run on Windows and Linux. macOS has not been tested. Windows is not required.
+The cross-platform checks cover dotdbg's command and live debugger workload tests on Windows, Linux, and macOS (Apple Silicon). Windows is not required.
 
 ## Install
 
@@ -29,7 +29,7 @@ dotnet test DotDbg.slnx
 dotnet src/DotDbg/bin/Debug/net10.0/DotDbg.dll --help
 ```
 
-The build restores `Microsoft.Diagnostics.DbgShim`. The test suite includes live debugger workloads that launch sample apps and attach to a running process. The [cross-platform checks](.github/workflows/cross-platform-checks.yml) workflow runs the full suite on Windows and Ubuntu.
+The build restores `Microsoft.Diagnostics.DbgShim`. The test suite includes live debugger workloads that launch sample apps and attach to a running process. The [cross-platform checks](.github/workflows/cross-platform-checks.yml) workflow runs dotdbg's command and live debugger workload tests on Windows, Ubuntu, and macOS (arm64). SharpDbg's own test suite is separate and is not run by this workflow.
 
 To package and install the current checkout as a local .NET tool:
 
