@@ -2488,22 +2488,26 @@ public sealed class DebugSession : IDisposable
             );
         }
 
-        var result = _debugger.SetBreakpoints(filePath, requests.ToArray());
-
-        for (var i = 0; i < groups.Count; i++)
+        // Publish engine IDs before a stop callback can match them to user breakpoints.
+        await WithDebuggerLockAsync(debugger =>
         {
-            if (i < result.Count)
+            var result = debugger.SetBreakpoints(filePath, requests.ToArray());
+            lock (_breakpointsLock)
             {
-                foreach (var bp in groups[i].Breakpoints)
+                for (var i = 0; i < groups.Count && i < result.Count; i++)
                 {
-                    bp.InternalId = result[i].Id;
-                    bp.Verified = result[i].Verified;
-                    bp.VerifiedMessage = result[i].Message;
-                    bp.BoundLine = result[i].Verified ? result[i].Line : null;
-                    bp.BoundColumn = result[i].Verified ? result[i].Column : null;
+                    foreach (var bp in groups[i].Breakpoints)
+                    {
+                        bp.InternalId = result[i].Id;
+                        bp.Verified = result[i].Verified;
+                        bp.VerifiedMessage = result[i].Message;
+                        bp.BoundLine = result[i].Verified ? result[i].Line : null;
+                        bp.BoundColumn = result[i].Verified ? result[i].Column : null;
+                    }
                 }
             }
-        }
+            return Task.FromResult(0);
+        });
     }
 
     private async Task RefreshIlBreakpointsAsync(string? moduleName, string method)
@@ -2540,18 +2544,21 @@ public sealed class DebugSession : IDisposable
             .ToArray();
 
         var methodKey = IlBreakpointLocation.BuildMethodKey(moduleName, method);
-        var result = _debugger.SetIlBreakpoints(methodKey, requests);
-
-        for (var i = 0; i < active.Count; i++)
+        await WithDebuggerLockAsync(debugger =>
         {
-            if (i < result.Count)
+            var result = debugger.SetIlBreakpoints(methodKey, requests);
+            lock (_breakpointsLock)
             {
-                var bp = active[i];
-                bp.InternalId = result[i].Id;
-                bp.Verified = result[i].Verified;
-                bp.VerifiedMessage = result[i].Message;
+                for (var i = 0; i < active.Count && i < result.Count; i++)
+                {
+                    var bp = active[i];
+                    bp.InternalId = result[i].Id;
+                    bp.Verified = result[i].Verified;
+                    bp.VerifiedMessage = result[i].Message;
+                }
             }
-        }
+            return Task.FromResult(0);
+        });
     }
 
     // Call while holding _breakpointsLock. A shared engine breakpoint cannot honor

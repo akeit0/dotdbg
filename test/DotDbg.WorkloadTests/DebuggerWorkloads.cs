@@ -257,22 +257,27 @@ public sealed class DebuggerWorkloads
         Assert.Contains(stop["trace"]!.AsArray(), item => String(item).Contains(": trace"));
         Assert.NotEmpty(debug.Call("events", "--kind", "trace")["data"]!["events"]!.AsArray());
         Assert.Empty(debug.Call("events", "--kind", "stop")["data"]!["events"]!.AsArray());
-        var breakpoint = debug.Call("break", "samples/DbgTargetFileApp/hello.cs:27");
-        var mixedStop = debug.Call("wait", "--timeout", "10")["data"]!;
-        Assert.Equal("breakpoint", String(mixedStop["reason"]));
-        Assert.Equal(2, mixedStop["breakpoints"]!.AsArray().Count);
-        Assert.Null(mixedStop["breakpointId"]);
-        Assert.Contains(
-            mixedStop["breakpoints"]!.AsArray(),
-            item => Integer(item!["id"]) == Integer(breakpoint["data"]!["breakpointId"])
-        );
-        Assert.Contains(
-            debug.Call("events", "--kind", "stop")["data"]!["events"]!.AsArray(),
-            item => String(item!["reason"]) == "breakpoint"
-        );
-        debug.Call("disable", String(breakpoint["data"]!["breakpointId"]));
-        debug.Call("continue");
-        Assert.Equal("trace", String(debug.Call("wait", "--timeout", "10")["data"]!["reason"]));
+        // Rebind while tracepoints keep the target running. Stop callbacks must
+        // always see the new engine IDs and both co-located user breakpoints.
+        for (var iteration = 0; iteration < 3; iteration++)
+        {
+            var breakpoint = debug.Call("break", "samples/DbgTargetFileApp/hello.cs:27");
+            var mixedStop = debug.Call("wait", "--timeout", "10")["data"]!;
+            Assert.Equal("breakpoint", String(mixedStop["reason"]));
+            Assert.Equal(2, mixedStop["breakpoints"]!.AsArray().Count);
+            Assert.Null(mixedStop["breakpointId"]);
+            Assert.Contains(
+                mixedStop["breakpoints"]!.AsArray(),
+                item => Integer(item!["id"]) == Integer(breakpoint["data"]!["breakpointId"])
+            );
+            Assert.Contains(
+                debug.Call("events", "--kind", "stop")["data"]!["events"]!.AsArray(),
+                item => String(item!["reason"]) == "breakpoint"
+            );
+            debug.Call("disable", String(breakpoint["data"]!["breakpointId"]));
+            debug.Call("continue");
+            Assert.Equal("trace", String(debug.Call("wait", "--timeout", "10")["data"]!["reason"]));
+        }
     }
 
     [Fact]
